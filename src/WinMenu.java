@@ -41,16 +41,12 @@ public class WinMenu extends JFrame {
 	private JTextField txtPrice;
 
 
+
 	public WinMenu() {
-		initGUI();
-	}
-	
-	
-	public void initGUI() {
 		setTitle("판매 메뉴 관리");
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		setBounds(100, 100, 710, 530);
+		setBounds(100, 100, 739, 530);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -137,7 +133,13 @@ public class WinMenu extends JFrame {
 				txtPrice.setText("");
 				rdbtnCoffee.setSelected(true);
 				
-				//addMenu();// db에 추가
+				String sql = "insert into menutbl values ('"+ row[0] + "','" + row[1] + "'," + Integer.parseInt(row[2])+ ")";
+				try {
+					addMenu(sql);
+				} catch (ClassNotFoundException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} // db에 추가
 			}
 		});
 		panel_1.add(btnNewButton_1);
@@ -147,22 +149,81 @@ public class WinMenu extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int rowIndex = table.getSelectedRow(); 
 				if(rowIndex==-1) return; //선택 값이 없을 경우 아무 일도 하지 않음
+				
+
+				String sql = "delete from menutbl where mname= '" + table.getValueAt(rowIndex,1).toString() + "';";
+
 				dtm.removeRow(rowIndex); 
 				
-				//subMenu();// db에서 데이터 삭제
-				
+				try {
+					subMenu(sql); // db에서 데이터 삭제
+				} catch (ClassNotFoundException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		panel_1.add(btnNewButton);
 		
+		/*
+		JButton btnUpdate = new JButton("새로 고침");
+		
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				data = new Vector<>();
+				try {
+					ShowMenu();
+				} catch (ClassNotFoundException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 
+				
+			}
+		});
+		
+		
+		panel_1.add(btnUpdate);
+		*
+		*/
+
+	}
+
+	protected void subMenu(String sql) throws ClassNotFoundException, SQLException {
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/project_cafe?user=root&password=1234");
+		Statement stmt = con.createStatement();
+
+		if (stmt.executeUpdate(sql)>=1) {
+			JOptionPane.showMessageDialog(null, "삭제 완료");
+		}
+		
+		stmt.close();
+		con.close();
+		
+	}
+
+	protected void addMenu(String sql) throws SQLException, ClassNotFoundException {
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/project_cafe?user=root&password=1234");
+		Statement stmt = con.createStatement();
+
+		if (stmt.executeUpdate(sql)>=1) {
+			JOptionPane.showMessageDialog(null, "추가 완료");
+		}
+		
+		stmt.close();
+		con.close();
+		
 	}
 
 	private void ShowMenu() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/project_cafe?user=root&password=1234");
 		Statement stmt = con.createStatement();
-		String sql = "select * from menu";
+		String sql = "select * from menutbl";
 		ResultSet rs = stmt.executeQuery(sql);
 		
 		
