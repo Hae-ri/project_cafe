@@ -118,50 +118,7 @@ public class WinMain extends JFrame {
 		JPanel panel_1 = new JPanel();
 		panel.add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(null);
-		
-		
-		/*
-		JButton btnMusicPlay = new JButton("음악 재생");
-		btnMusicPlay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lblNewLabel.setText("Play .. ");
-				
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("음악파일", "wav");
-				chooser.setFileFilter(filter);
-				int ret = chooser.showOpenDialog(null);
-				String pathName = chooser.getSelectedFile().getPath();
-				
-				if (ret == JFileChooser.APPROVE_OPTION) {
-					try {
-						clip = AudioSystem.getClip();
-						File audioFile = new File(pathName);
-						//File audioFile = new File("/audio/1.wav");
-						AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
-						clip.open(audioStream);
-						clip.start();
-						clip.loop(100);
-					} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-			}
-		});
-		panel_1.add(btnMusicPlay);
-		
-		JButton btnMusicStop = new JButton("음악 정지");
-		btnMusicStop.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lblNewLabel.setText("화...홧팅!");
-				clip.stop();
-			}
-		});
-		panel_1.add(btnMusicStop);
-		*/
-		
-		
-		
+
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.SOUTH);
 	}
