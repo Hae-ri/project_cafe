@@ -49,7 +49,7 @@ public class WinOrder extends JDialog {
 	private List<String> mclass = new ArrayList<String>(); // db에서 가져온 mclass
 	private List<String> mname = new ArrayList<String>(); // db에서 가져온 mname
 	private List<String> mprice = new ArrayList<String>(); // db에서 가져온 mprice
-	private String tclass; // 화면(테이블)에 표시되는 mclass
+	//private String tclass; // 화면(테이블)에 표시되는 mclass
 	private Vector order; // 화면(테이블)에 들어갈 주문 내역
 	private Vector orderList; // db에 들어갈 실제 주문 내역
 	private Vector<String> columnNames = new Vector<>();
@@ -58,6 +58,7 @@ public class WinOrder extends JDialog {
 	private JButton btnmenu;
 	private int amount=0; // 메뉴 버튼을 클릭했을 때 수량(+1)
 	private int total; // 총금액
+	private int stamp; // 적립할 스탬프 개수
 	private JTextField txtTotal; // 총 금액
 	private JTextField txtCharge; // 받은 금액
 	private JTextField txtChange; // 거스름돈
@@ -289,20 +290,28 @@ public class WinOrder extends JDialog {
 										
 										if (sphone.length() == 11) { // 핸드폰 번호를 입력한 경우
 											/*
-											 membertbl
+											 insert membertbl
 											 음료 1잔당 스탬프 1개 적립
 											 핸드폰 번호 입력
 											 * 
 											 */
 											
 											for(int i = 0 ; i < dtm.getRowCount();i++){ // 주문 내역 테이블 데이터 불러와서
-												int accamount = Integer.parseInt(table.getValueAt(i,3).toString());
-												cnt = cnt+accamount;
+												// table.getValueAt(i,3).toString().equal("음료") 인 것만 stamp++;
+												
+												if (table.getValueAt(i,0).equals("음료")) {
+													System.out.println(table.getValueAt(i,1));
+													stamp++;
+													System.out.println("스탬프" + stamp);
+												}
+												
+//												int accamount = Integer.parseInt(table.getValueAt(i,3).toString());
+//												cnt = cnt+accamount;
 											}
-											sql = "insert into membertbl values ('" + sphone+ "'," + cnt +",sysdate())";
-											
+											sql = "insert into membertbl values ('" + sphone+ "'," + stamp +",sysdate())";
+											System.out.println(sql);
 											try {
-												insertmembertbl(sql);
+												insertmembertbl(sql, stamp);
 											} catch (ClassNotFoundException | SQLException e2) {
 												// TODO Auto-generated catch block
 												e2.printStackTrace();
@@ -369,16 +378,16 @@ public class WinOrder extends JDialog {
 										 insert into salestbl values ();
 										 * 
 										 */
-										
-										sql ="insert into salestbl values (null,'" +  Integer.parseInt(txtTotal.getText())  + "','1',sysdate(),'카드')";
+										sql ="insert into salestbl(snum,stotal,sdate,spay) values (null," + Integer.parseInt(txtTotal.getText()) + ",sysdate(),'카드')";
 										System.out.println(sql);
-	
+										
 										try {
 											insertsalestbl(sql);
 										} catch (ClassNotFoundException | SQLException e1) {
 											// TODO Auto-generated catch block
 											e1.printStackTrace();
 										}
+
 		
 										/*
 										 ordertbl
@@ -395,7 +404,7 @@ public class WinOrder extends JDialog {
 										
 										for(int i = 0 ; i < dtm.getRowCount();i++){ // 주문 내역 테이블 데이터 불러와서
 											
-											sql ="insert into ordertbl values ('"+table.getValueAt(i,1).toString()+"',"+ Integer.parseInt(table.getValueAt(i,2).toString()) +","+ Integer.parseInt(table.getValueAt(i,3).toString()) +"," + Integer.parseInt(table.getValueAt(i,4).toString()) +",sysdate(),'1','카드');";
+											sql ="insert into ordertbl (menu, price, amount,total, mdate, pay) values ('"+table.getValueAt(i,1).toString()+"',"+ Integer.parseInt(table.getValueAt(i,2).toString()) +","+ Integer.parseInt(table.getValueAt(i,3).toString()) +"," + Integer.parseInt(table.getValueAt(i,4).toString()) +",sysdate(),'카드');";
 											try {
 												insertordertbl(sql);
 											} catch (ClassNotFoundException | SQLException e1) {
@@ -419,7 +428,7 @@ public class WinOrder extends JDialog {
 								public void actionPerformed(ActionEvent e) {
 									
 // 현금 결제 시작 ================================================================================================
-
+									txtCharge.setText(txtTotal.getText());
 									int result = JOptionPane.showConfirmDialog(null, "적립하시겠습니까?","스탬프 적립",JOptionPane.YES_NO_CANCEL_OPTION);
 									int cnt =0;
 									String sql;
@@ -427,18 +436,39 @@ public class WinOrder extends JDialog {
 									if(result == JOptionPane.YES_OPTION) { // 예
 										String sphone = JOptionPane.showInputDialog("적립할 핸드폰 번호를 입력하세요.");
 										
+										
+										// 핸드폰 번호(11자리)를 정확히 입력하지 않은 경우
+										// 입력할 때까지
+										while(sphone.length() != 11) {
+											JOptionPane.showMessageDialog(null, "핸드폰 번호를 정확히 입력해주세요.");
+											sphone = JOptionPane.showInputDialog("적립할 핸드폰 번호를 입력하세요.");											
+										}
+										
+										
 										if (sphone.length() == 11) { // 핸드폰 번호를 입력한 경우
-											// membertbl
-											// 음료 1잔당 스탬프 1개 적립
-											// 핸드폰 번호 입력
-											for(int i = 0 ; i < dtm.getRowCount();i++){ // 주문 내역 테이블 데이터 불러와서
-												int accamount = Integer.parseInt(table.getValueAt(i,3).toString());
-												cnt = cnt+accamount;
-											}
-											sql = "insert into membertbl values ('" + sphone+ "'," + cnt +",sysdate())";
+											/*
+											 insert membertbl
+											 음료 1잔당 스탬프 1개 적립
+											 핸드폰 번호 입력
+											 * 
+											 */
 											
+											for(int i = 0 ; i < dtm.getRowCount();i++){ // 주문 내역 테이블 데이터 불러와서
+												// table.getValueAt(i,3).toString().equal("음료") 인 것만 stamp++;
+												
+												if (table.getValueAt(i,0).equals("음료")) {
+													System.out.println(table.getValueAt(i,1));
+													stamp++;
+													System.out.println("스탬프" + stamp);
+												}
+												
+//												int accamount = Integer.parseInt(table.getValueAt(i,3).toString());
+//												cnt = cnt+accamount;
+											}
+											sql = "insert into membertbl values ('" + sphone+ "'," + stamp +",sysdate())";
+											System.out.println(sql);
 											try {
-												insertmembertbl(sql);
+												insertmembertbl(sql, stamp);
 											} catch (ClassNotFoundException | SQLException e2) {
 												// TODO Auto-generated catch block
 												e2.printStackTrace();
@@ -447,16 +477,17 @@ public class WinOrder extends JDialog {
 											/*
 											 salestbl 
 											 snum(순번) // null
-											 stotal(합계) // Integer.parseInt(txtTotal.getText());
+											 stotal(합계) //  Integer.parseInt(txtTotal.getText());
 											 sphone(핸드폰번호) // sphone
 											 날짜 //curdate()
 											 결제수단(현금) //2
 											 insert into salestbl values ();
 											 * 
 											 */
-
-											sql ="insert into salestbl values (null,'" + Integer.parseInt(txtTotal.getText()) + "','" +sphone+ "',sysdate(),'현금')";
-		
+											
+											sql ="insert into salestbl values (null," + Integer.parseInt(txtTotal.getText()) + ",'" +sphone+ "',sysdate(),'현금')";
+											System.out.println(sql);
+											
 											try {
 												insertsalestbl(sql);
 											} catch (ClassNotFoundException | SQLException e1) {
@@ -465,17 +496,17 @@ public class WinOrder extends JDialog {
 											}
 		
 											/*
-											ordertbl
-											메뉴명 //table.getValueAt(i,1).toString();
-											가격 //Integer.parseInt(table.getValueAt(i,2).toString());
-											수량 //Integer.parseInt(table.getValueAt(i,3).toString());
-											합계 //Integer.parseInt(table.getValueAt(i,4).toString());
-											날짜 //curdate()
-											핸드폰번호 //sphone
-											결제수단(현금) //2
-											insert into ordertbl values ();
-											* 
-											*/
+											 ordertbl
+											 메뉴명 //table.getValueAt(i,1).toString();
+											 가격 //Integer.parseInt(table.getValueAt(i,2).toString());
+											 수량 //Integer.parseInt(table.getValueAt(i,3).toString());
+											 합계 //Integer.parseInt(table.getValueAt(i,4).toString());
+											 날짜 //curdate()
+											 핸드폰번호 //sphone
+											 결제수단(현금) //2
+											 insert into ordertbl values ();
+											 * 
+											 */
 											
 											for(int i = 0 ; i < dtm.getRowCount();i++){ // 주문 내역 테이블 데이터 불러와서
 												
@@ -487,35 +518,34 @@ public class WinOrder extends JDialog {
 													e1.printStackTrace();
 												}
 											}
+											
 									}else {
-										JOptionPane.showMessageDialog(null, "핸드폰 번호를 정확히 입력해주세요.");
+
 									}
-										
+										tblClear();	
 									}else if(result == JOptionPane.NO_OPTION) { // 아니오
-												
+											
 										/*
 										 salestbl 
 										 snum(순번) // null
-										 stotal(합계) // Integer.parseInt(txtTotal.getText());
+										 stotal(합계) //  Integer.parseInt(txtTotal.getText()) ;
 										 sphone(핸드폰번호) // 일괄 1 입력
 										 날짜 //curdate()
 										 결제수단(현금) //2
 										 insert into salestbl values ();
 										 * 
 										 */
-										
-
-										
-										sql ="insert into salestbl values (null,'" + Integer.parseInt(txtTotal.getText()) + "','1',sysdate(),'현금')";
+										sql ="insert into salestbl(snum,stotal,sdate,spay) values (null," + Integer.parseInt(txtTotal.getText()) + ",sysdate(),'현금')";
 										System.out.println(sql);
-	
+										
 										try {
 											insertsalestbl(sql);
 										} catch (ClassNotFoundException | SQLException e1) {
 											// TODO Auto-generated catch block
 											e1.printStackTrace();
 										}
-	
+
+		
 										/*
 										 ordertbl
 										 메뉴명 //table.getValueAt(i,1).toString();
@@ -531,7 +561,7 @@ public class WinOrder extends JDialog {
 										
 										for(int i = 0 ; i < dtm.getRowCount();i++){ // 주문 내역 테이블 데이터 불러와서
 											
-											sql ="insert into ordertbl values ('"+table.getValueAt(i,1).toString()+"',"+ Integer.parseInt(table.getValueAt(i,2).toString()) +","+ Integer.parseInt(table.getValueAt(i,3).toString()) +"," + Integer.parseInt(table.getValueAt(i,4).toString()) +",sysdate(),'1','현금');";
+											sql ="insert into ordertbl (menu, price, amount,total, mdate, pay) values ('"+table.getValueAt(i,1).toString()+"',"+ Integer.parseInt(table.getValueAt(i,2).toString()) +","+ Integer.parseInt(table.getValueAt(i,3).toString()) +"," + Integer.parseInt(table.getValueAt(i,4).toString()) +",sysdate(),'현금');";
 											try {
 												insertordertbl(sql);
 											} catch (ClassNotFoundException | SQLException e1) {
@@ -539,10 +569,11 @@ public class WinOrder extends JDialog {
 												e1.printStackTrace();
 											}
 										}
+										tblClear();
 									}else { // 버튼 선택 안 할 경우
 										// 되돌아가기
 									}	
-// 현금 결제 끝 ================================================================================================
+//  현금 결제 끝 ================================================================================================
 								}
 							});
 							btnCash.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
@@ -681,11 +712,11 @@ public class WinOrder extends JDialog {
 
 										
 										for(int i=0;i<count;i++) {
-											if(mclass.get(i).equals("음료")) {
-												tclass = "음료";
-											}else {
-												tclass = "디저트";
-											}
+//											if(mclass.get(i).equals("음료")) {
+//												tclass = "음료";
+//											}else {
+//												tclass = "디저트";
+//											}
 											
 											btnmenu = new JButton(Integer.toString(i)); // mname.get(i)+"\n"+mprice.get(i)
 											btnmenu.setPreferredSize(dimension);
@@ -708,7 +739,7 @@ public class WinOrder extends JDialog {
 													
 													order = new Vector<>();
 													
-													order.add(tclass);
+													//order.add(tclass);
 													order.add(mmenu);
 													order.add(mprice);
 													order.add(amount);
@@ -839,14 +870,21 @@ public class WinOrder extends JDialog {
 								e1.printStackTrace();
 							}
 
+//							for(int i=0;i<mclass.size();i++) {
+//							
+//								tclass = mclass.get(i);
+//								System.out.println(tclass);
 							
+							
+//							for(int i=0;i<mclass.size();i++) {
+//								if(mclass.get(i).length() == 1) {
+//									tclass = mclass.get(i);
+//									System.out.println(tclass);
+//								}else {
+//									tclass = "디저트";
+//								}
 							for(int i=0;i<count;i++) {
-								if(mclass.get(i).equals("음료")) {
-									tclass = "음료";
-								}else {
-									tclass = "디저트";
-								}
-								
+								String tclass = mclass.get(i);
 								btnmenu = new JButton(Integer.toString(i)); // mname.get(i)+"\n"+mprice.get(i)
 								btnmenu.setPreferredSize(dimension);
 								btnmenu.setText("<HTML><body style='text-align:center;'>"+mname.get(i)+"<br>"+mprice.get(i)+"</body></HTML>");
@@ -858,30 +896,74 @@ public class WinOrder extends JDialog {
 									
 									@Override
 									public void actionPerformed(ActionEvent e) { // 메뉴 버튼 클릭하면 메뉴명, 가격, 수량을 테이블에 입력
+
+
+										//System.out.println(tclass);
 										JButton btn1 = (JButton) e.getSource();
-										amount++;
+										//amount++;
 										String[] choice = btn1.getText().split("<br>"); // 클릭한 버튼의 텍스트 가져오기
 										String mmenu = choice[0].substring(39); // 클릭한 버튼의 메뉴명 가져오기
 										String mprice = choice[1].substring(0,choice[1].indexOf("<")); // 클릭한 버튼의 가격 가져오기
 //										System.out.println(mmenu);
 //										System.out.println(mprice);
-										
-										order = new Vector<>();
-										
-										order.add(tclass);
-										order.add(mmenu);
-										order.add(mprice);
-										order.add(amount);
-										order.add(Integer.toString(Integer.parseInt(mprice)*amount));
-										
-										total=total+Integer.parseInt(mprice)*amount;
-										//System.out.println(total);
-										txtTotal.setText(Integer.toString(total));
-										
-										amount=0;														
-										
-										dtm.addRow(order);
-						
+									
+										if(dtm.getRowCount() == 0) {
+											amount++;
+											order = new Vector<>();
+											
+											order.add(tclass);
+											order.add(mmenu);
+											order.add(mprice);
+											order.add(amount);
+											order.add(Integer.toString(Integer.parseInt(mprice)*amount));
+											
+											total=total+Integer.parseInt(mprice)*amount;
+											//System.out.println(total);
+											txtTotal.setText(Integer.toString(total));
+											
+											amount=0;														
+	
+											dtm.addRow(order);
+							
+											}else {
+												for(int i = 0 ; i < dtm.getRowCount();i++){ // 주문 내역 테이블 데이터 불러와서
+													if (!table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 없으면 전체 추가
+														System.out.println(dtm.getRowCount()+"        59159595925");
+														System.out.println("없다!"+table.getValueAt(i,1));
+														amount++;
+														System.out.println("없는 거 새로 추가"+ amount);
+														order = new Vector<>();
+														
+														order.add(tclass);
+														order.add(mmenu);
+														order.add(mprice);
+														order.add(amount);
+														order.add(Integer.toString(Integer.parseInt(mprice)*amount));
+														
+														total=total+Integer.parseInt(mprice)*amount;
+														//System.out.println(total);
+														txtTotal.setText(Integer.toString(total));
+														
+														amount=0;														
+														
+														dtm.addRow(order);
+														break;
+														
+													}
+													
+													if (table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 있으면, 수량 +1	
+														System.out.println("메뉴가 있다!" + table.getValueAt(i,1));
+//														int rowIndex = table.getSelectedRow(i); // 메뉴명이 같은 행
+														int accamount = Integer.parseInt(table.getValueAt(i,3).toString());
+														int tPrice = Integer.parseInt(table.getValueAt(i,2).toString());
+														table.setValueAt(accamount+1, i, 3);
+														table.setValueAt((accamount+1)*tPrice, i, 4);
+														amount=0;
+														break;
+													}
+												}
+											
+											} 
 									}
 								});
 							}
@@ -940,11 +1022,20 @@ public class WinOrder extends JDialog {
 		con.close();		
 	}
 	
-	protected void insertmembertbl(String sql) throws ClassNotFoundException, SQLException {
+	protected void insertmembertbl(String sql, int stamp) throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/project_cafe?user=root&password=1234");
 		Statement stmt = con.createStatement();
-		stmt.executeUpdate(sql);
+		
+		try {
+			if(stmt.executeUpdate(sql) >= 1) {
+				JOptionPane.showMessageDialog(null, stamp + "개 적립 완료");
+			}else
+				JOptionPane.showMessageDialog(null, "적립 오류");
+		} catch (HeadlessException | SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		stmt.close();
 		con.close();
