@@ -24,7 +24,7 @@ public class Member extends JPanel {
 	 * Create the panel.
 	 */
 	public Member(String strphone, String strstamp) {
-
+		Font font = new Font("나눔스퀘어_ac", Font.PLAIN, 13);
 		stamp = Integer.parseInt(strstamp);
 		setLayout(new BorderLayout(0, 0));
 		
@@ -33,21 +33,21 @@ public class Member extends JPanel {
 		add(panel, BorderLayout.NORTH);
 		
 		lblPhone = new JLabel("");
-		lblPhone.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		lblPhone.setFont(font);
 		lblPhone.setText(strphone);
 		panel.add(lblPhone);
 		
 		JLabel lblNewLabel_1 = new JLabel("님 총");
-		lblNewLabel_1.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		lblNewLabel_1.setFont(font);
 		panel.add(lblNewLabel_1);
 		
 		lblTotalStamp = new JLabel("New label");
-		lblTotalStamp.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		lblTotalStamp.setFont(font);
 		lblTotalStamp.setText(strstamp);
 		panel.add(lblTotalStamp);
 		
 		JLabel lblNewLabel = new JLabel("개");
-		lblNewLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		lblNewLabel.setFont(font);
 		panel.add(lblNewLabel);
 		
 		JPanel panel_1 = new JPanel();
@@ -68,7 +68,7 @@ public class Member extends JPanel {
 
 		for(int i=0;i<stamp;i++ ) {
 			lblStamp[i].setText("");
-			lblStamp[i].setIcon(new ImageIcon("C:\\workspace\\New\\Project_Cafe\\img\\stamp03.png"));
+			lblStamp[i].setIcon(new ImageIcon("C:\\workspace\\New\\Project_Cafe\\img\\stamp.png"));
 		}
 		
 

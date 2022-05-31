@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -44,6 +45,7 @@ public class WinMenu extends JFrame {
 
 	public WinMenu() {
 		setTitle("판매 메뉴 관리");
+		Font font = new Font("나눔스퀘어_ac", Font.PLAIN, 12);
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setBounds(100, 100, 739, 530);
@@ -79,16 +81,18 @@ public class WinMenu extends JFrame {
 		
 		DefaultTableModel dtm = new DefaultTableModel(data, columnNames);
 		table = new JTable(dtm);
-		
+		table.setFont(font);
 		scrollPane.setViewportView(table);
 		
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.SOUTH);
 		
 		JRadioButton rdbtnCoffee = new JRadioButton("음료");
+		rdbtnCoffee.setFont(font);
 		panel_1.add(rdbtnCoffee);
 		
 		JRadioButton rdbtnNoneCoffee = new JRadioButton("디저트");
+		rdbtnNoneCoffee.setFont(font);
 		panel_1.add(rdbtnNoneCoffee);
 		
 		ButtonGroup rg = new ButtonGroup(); 
@@ -96,21 +100,26 @@ public class WinMenu extends JFrame {
 		rdbtnCoffee.setSelected(true);
 		
 		JLabel lblMenu = new JLabel("메뉴명 :");
+		lblMenu.setFont(font);
 		panel_1.add(lblMenu);
 		
 		txtMenu = new JTextField();
+		txtMenu.setFont(font);
 		panel_1.add(txtMenu);
 		txtMenu.setColumns(10);
 		
 		JLabel lblPrice = new JLabel("판매가격:");
+		lblPrice.setFont(font);
 		panel_1.add(lblPrice);
 		
 		txtPrice = new JTextField();
+		txtPrice.setFont(font);
 		panel_1.add(txtPrice);
 		txtPrice.setColumns(10);
 		
-		JButton btnNewButton_1 = new JButton("추가");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton btnInsertMenu = new JButton("추가");
+		btnInsertMenu.setFont(font);
+		btnInsertMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				String menu = txtMenu.getText();
@@ -142,10 +151,11 @@ public class WinMenu extends JFrame {
 				} // db에 추가
 			}
 		});
-		panel_1.add(btnNewButton_1);
+		panel_1.add(btnInsertMenu);
 		
-		JButton btnNewButton = new JButton("삭제");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnDeleteMenu = new JButton("삭제");
+		btnDeleteMenu.setFont(font);
+		btnDeleteMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int rowIndex = table.getSelectedRow(); 
 				if(rowIndex==-1) return; //선택 값이 없을 경우 아무 일도 하지 않음
@@ -163,7 +173,7 @@ public class WinMenu extends JFrame {
 				}
 			}
 		});
-		panel_1.add(btnNewButton);
+		panel_1.add(btnDeleteMenu);
 		
 		/*
 		JButton btnUpdate = new JButton("새로 고침");

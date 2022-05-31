@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -9,17 +10,20 @@ import java.sql.Statement;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.Panel;
 import javax.swing.JTabbedPane;
+import java.awt.Toolkit;
 
 public class WinShowMember extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	String strPhone;
+	private String strPhone;
 	private String Members[][] = new String [100][2];
 	private Member member[];
 	private String mphone;
@@ -29,7 +33,6 @@ public class WinShowMember extends JDialog {
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	
 
 	public WinShowMember(String strPhone) throws SQLException, ClassNotFoundException {
 		this.strPhone = strPhone;
@@ -65,17 +68,18 @@ public class WinShowMember extends JDialog {
 		}
 		// ==========================
 
-		
-		for(int i=0;i<count;i++) {
-			member[i] = new Member(Members[i][0],Members[i][1]);
-			tabbedPane.addTab(Members[i][0], member[i]);
-			
-			//System.out.println(Members[i][0]+","+Members[i][1]);
-			
+
+			for(int i=0;i<count;i++) {
+				member[i] = new Member(Members[i][0],Members[i][1]);
+				tabbedPane.addTab(Members[i][0], member[i]);
+				
+				//System.out.println(Members[i][0]+","+Members[i][1]);
 		}
+		
 	}
 
 	public WinShowMember() throws ClassNotFoundException, SQLException {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WinShowMember.class.getResource("/img/coffee01.png")));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();

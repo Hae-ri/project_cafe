@@ -27,7 +27,6 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import org.jsoup.Jsoup;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTextField;
@@ -63,6 +62,7 @@ public class WinOrder extends JDialog {
 	private JTextField txtCharge; // 받은 금액
 	private JTextField txtChange; // 거스름돈
 	private JTextField txtDC; // 할인 금액
+	private Font font;
 
 	
 	/**
@@ -84,12 +84,14 @@ public class WinOrder extends JDialog {
 	 * @throws ClassNotFoundException 
 	 */
 	public WinOrder() throws ClassNotFoundException, SQLException {
+		font = new Font("나눔스퀘어_ac", Font.PLAIN, 13);
 		initGUI();
 	}
 	
 	public void tblClear() { // 주문 내역 테이블 내용 지우기
 		while(dtm.getRowCount() > 0){
 			   for(int i = 0 ; i < dtm.getRowCount();i++){
+				   stamp=0;
 				   total=0;
 				   txtTotal.setText(Integer.toString(total));
 				   txtCharge.setText(Integer.toString(total));
@@ -179,6 +181,7 @@ public class WinOrder extends JDialog {
 						
 						dtm = new DefaultTableModel(order,columnNames);
 						table = new JTable(dtm);
+						table.setFont(font);
 						table.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseReleased(MouseEvent e) {
@@ -204,59 +207,49 @@ public class WinOrder extends JDialog {
 						panel_2.setLayout(new GridLayout(0, 2, 0, 0));
 						{
 							JLabel lblNewLabel_2 = new JLabel("총 금액 :");
-							lblNewLabel_2.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+							lblNewLabel_2.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							panel_2.add(lblNewLabel_2);
 						}
 						{
 							txtTotal = new JTextField();
-							txtTotal.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+							txtTotal.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							txtTotal.setEditable(false);
 							txtTotal.setColumns(10);
 							panel_2.add(txtTotal);
 						}
 						{
 							JLabel lblNewLabel_2 = new JLabel("할인 금액 :");
-							lblNewLabel_2.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+							lblNewLabel_2.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							panel_2.add(lblNewLabel_2);
 						}
 						{
 							txtDC = new JTextField();
 							txtDC.setText("0");
-							txtDC.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+							txtDC.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							txtDC.setEditable(false);
 							txtDC.setColumns(15);
 							panel_2.add(txtDC);
 						}
 						{
 							JLabel lblNewLabel_3 = new JLabel("받은 금액 :");
-							lblNewLabel_3.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+							lblNewLabel_3.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							panel_2.add(lblNewLabel_3);
 						}
 						{
 							txtCharge = new JTextField();
-							txtCharge.addKeyListener(new KeyAdapter() {
-								@Override
-								public void keyPressed(KeyEvent e) {
-									if(e.getKeyCode() == KeyEvent.VK_ENTER) { // 받은금액-총금액-할인금액 = 거스름돈을 setText
-										int Change = Integer.parseInt(txtCharge.getText())-Integer.parseInt(txtTotal.getText())+Integer.parseInt(txtDC.getText());
-												
-										txtChange.setText(Integer.toString(Change)); // 거스름돈
-									}
-									
-								}
-							});
-							txtCharge.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+
+							txtCharge.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							panel_2.add(txtCharge);
 							txtCharge.setColumns(10);
 						}
 						{
 							JLabel lblNewLabel_4 = new JLabel("거스름돈 :");
-							lblNewLabel_4.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+							lblNewLabel_4.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							panel_2.add(lblNewLabel_4);
 						}
 						{
 							txtChange = new JTextField();
-							txtChange.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+							txtChange.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							txtChange.setEditable(false);
 							panel_2.add(txtChange);
 							txtChange.setColumns(10);
@@ -416,19 +409,23 @@ public class WinOrder extends JDialog {
 									}else { // 버튼 선택 안 할 경우
 										// 되돌아가기
 									}	
-//  카드 결제 끝 ================================================================================================
 								}								
 							});
-							btnCard.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+//  카드 결제 끝 ================================================================================================
+							btnCard.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 12));
 							panel_2.add(btnCard);
 						}
 						{
 							JButton btnCash = new JButton("현금");
 							btnCash.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
-									
+									String cash = JOptionPane.showInputDialog("받은 금액 : ");
 // 현금 결제 시작 ================================================================================================
-									txtCharge.setText(txtTotal.getText());
+									txtCharge.setText(cash);
+									int Change = Integer.parseInt(txtCharge.getText())-Integer.parseInt(txtTotal.getText())+Integer.parseInt(txtDC.getText());
+									
+									txtChange.setText(Integer.toString(Change)); // 거스름돈
+									
 									int result = JOptionPane.showConfirmDialog(null, "적립하시겠습니까?","스탬프 적립",JOptionPane.YES_NO_CANCEL_OPTION);
 									int cnt =0;
 									String sql;
@@ -573,10 +570,11 @@ public class WinOrder extends JDialog {
 									}else { // 버튼 선택 안 할 경우
 										// 되돌아가기
 									}	
-//  현금 결제 끝 ================================================================================================
+
 								}
 							});
-							btnCash.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+//  현금 결제 끝 ================================================================================================
+							btnCash.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 12));
 							panel_2.add(btnCash);
 						}
 						{
@@ -588,7 +586,7 @@ public class WinOrder extends JDialog {
 								}
 							});
 							
-							btnStamp.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+							btnStamp.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 12));
 							panel_2.add(btnStamp);
 						}
 					}
@@ -598,7 +596,7 @@ public class WinOrder extends JDialog {
 					panel_orderTable.add(panel_1, BorderLayout.NORTH);
 					{
 						JLabel lblNewLabel_1 = new JLabel("주문 내역");
-						lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+						lblNewLabel_1.setFont(new Font("나눔스퀘어 Bold", Font.BOLD, 17));
 						panel_1.add(lblNewLabel_1);
 					}
 				}
@@ -612,8 +610,9 @@ public class WinOrder extends JDialog {
 					JPanel panel_classBar = new JPanel();
 					panel_center.add(panel_classBar, BorderLayout.NORTH);
 					{
+// 음료 버튼 클릭 ================================================================================================						
 							btnBeverage = new JButton("음료");
-							btnBeverage.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+							btnBeverage.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 12));
 							btnBeverage.addActionListener(new ActionListener() { // 음료 버튼 클릭
 								public void actionPerformed(java.awt.event.ActionEvent e) {
 									mname.removeAll(mname);
@@ -639,7 +638,7 @@ public class WinOrder extends JDialog {
 										
 										if(rs.next()) {
 											count= rs.getInt(1);
-											System.out.println(count);
+											//System.out.println(count);
 										}
 										sql = "select * from menuTBL where mclass='음료'";
 										rs = stmt.executeQuery(sql);
@@ -653,21 +652,64 @@ public class WinOrder extends JDialog {
 										e1.printStackTrace();
 									}
 									
+									
 									for(int i=0;i<count;i++) {
+										String tclass = mclass.get(i);
 										btnmenu = new JButton(Integer.toString(i)); // mname.get(i)+"\n"+mprice.get(i)
 										btnmenu.setPreferredSize(dimension);
 										btnmenu.setText("<HTML><body style='text-align:center;'>"+mname.get(i)+"<br>"+mprice.get(i)+"</body></HTML>");
+//										btnmenu.setText(mname.get(i)+"\n"+mprice.get(i));											
 										panel_menuButtonBar.add(btnmenu);
 										panel_menuButtonBar.revalidate();
-											}
-									}
 
+										btnmenu.addActionListener(new ActionListener() {
+											
+											@Override
+											public void actionPerformed(ActionEvent e) { // 메뉴 버튼 클릭하면 메뉴명, 가격, 수량을 테이블에 입력
+
+
+												//System.out.println(tclass);
+												JButton btn1 = (JButton) e.getSource();
+												amount++;
+												String[] choice = btn1.getText().split("<br>"); // 클릭한 버튼의 텍스트 가져오기
+												String mmenu = choice[0].substring(39); // 클릭한 버튼의 메뉴명 가져오기
+												String mprice = choice[1].substring(0,choice[1].indexOf("<")); // 클릭한 버튼의 가격 가져오기
+											
+												
+												/* 메뉴 추가
+
+												 */
+												order = new Vector<>();
+
+												
+												order.add(tclass);
+												order.add(mmenu);
+												order.add(mprice);
+												order.add(amount);
+												order.add(Integer.toString(Integer.parseInt(mprice)*amount));
+												
+												total=total+Integer.parseInt(mprice)*amount;
+												//System.out.println(total);
+												txtTotal.setText(Integer.toString(total));
+												
+												amount=0;														
+
+												dtm.addRow(order);
+											}
+							
+									});
+									
+								
+									}
+								}
 							});
+// 음료 버튼 끝 ================================================================================================	
 							
 					}
 							{
+// 전체 버튼 클릭 ================================================================================================
 								JButton btnAll = new JButton("전체");
-								btnAll.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+								btnAll.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 12));
 								btnAll.addActionListener(new ActionListener() {
 									public void actionPerformed(ActionEvent e) {
 										mname.removeAll(mname);
@@ -693,7 +735,7 @@ public class WinOrder extends JDialog {
 											
 											if(rs.next()) {
 												count= rs.getInt(1);
-												System.out.println(count);
+												//System.out.println(count);
 											}
 											
 											 sql = "select * from menuTBL";
@@ -710,14 +752,8 @@ public class WinOrder extends JDialog {
 											e1.printStackTrace();
 										}
 
-										
 										for(int i=0;i<count;i++) {
-//											if(mclass.get(i).equals("음료")) {
-//												tclass = "음료";
-//											}else {
-//												tclass = "디저트";
-//											}
-											
+											String tclass = mclass.get(i);
 											btnmenu = new JButton(Integer.toString(i)); // mname.get(i)+"\n"+mprice.get(i)
 											btnmenu.setPreferredSize(dimension);
 											btnmenu.setText("<HTML><body style='text-align:center;'>"+mname.get(i)+"<br>"+mprice.get(i)+"</body></HTML>");
@@ -729,35 +765,42 @@ public class WinOrder extends JDialog {
 												
 												@Override
 												public void actionPerformed(ActionEvent e) { // 메뉴 버튼 클릭하면 메뉴명, 가격, 수량을 테이블에 입력
+
+
+													//System.out.println(tclass);
 													JButton btn1 = (JButton) e.getSource();
 													amount++;
 													String[] choice = btn1.getText().split("<br>"); // 클릭한 버튼의 텍스트 가져오기
 													String mmenu = choice[0].substring(39); // 클릭한 버튼의 메뉴명 가져오기
 													String mprice = choice[1].substring(0,choice[1].indexOf("<")); // 클릭한 버튼의 가격 가져오기
-//													System.out.println(mmenu);
-//													System.out.println(mprice);
+												
 													
+													/* 메뉴 추가
+
+													 */
 													order = new Vector<>();
+
 													
-													//order.add(tclass);
+													order.add(tclass);
 													order.add(mmenu);
 													order.add(mprice);
 													order.add(amount);
 													order.add(Integer.toString(Integer.parseInt(mprice)*amount));
 													
 													total=total+Integer.parseInt(mprice)*amount;
-													System.out.println(total);
+													//System.out.println(total);
 													txtTotal.setText(Integer.toString(total));
 													
 													amount=0;														
-													
+
 													dtm.addRow(order);
-									
 												}
 											});
 										}
 									}
 								});
+// 전체 버튼 끝 ================================================================================================	
+								
 								panel_classBar.add(btnAll);
 							}
 							panel_classBar.add(btnBeverage);
@@ -812,7 +855,7 @@ public class WinOrder extends JDialog {
 									
 								}
 							});
-							btnDessert.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+							btnDessert.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 12));
 							panel_classBar.add(btnDessert);
 					}
 					{
@@ -870,19 +913,6 @@ public class WinOrder extends JDialog {
 								e1.printStackTrace();
 							}
 
-//							for(int i=0;i<mclass.size();i++) {
-//							
-//								tclass = mclass.get(i);
-//								System.out.println(tclass);
-							
-							
-//							for(int i=0;i<mclass.size();i++) {
-//								if(mclass.get(i).length() == 1) {
-//									tclass = mclass.get(i);
-//									System.out.println(tclass);
-//								}else {
-//									tclass = "디저트";
-//								}
 							for(int i=0;i<count;i++) {
 								String tclass = mclass.get(i);
 								btnmenu = new JButton(Integer.toString(i)); // mname.get(i)+"\n"+mprice.get(i)
@@ -900,14 +930,47 @@ public class WinOrder extends JDialog {
 
 										//System.out.println(tclass);
 										JButton btn1 = (JButton) e.getSource();
-										//amount++;
+										amount++;
 										String[] choice = btn1.getText().split("<br>"); // 클릭한 버튼의 텍스트 가져오기
 										String mmenu = choice[0].substring(39); // 클릭한 버튼의 메뉴명 가져오기
 										String mprice = choice[1].substring(0,choice[1].indexOf("<")); // 클릭한 버튼의 가격 가져오기
-//										System.out.println(mmenu);
-//										System.out.println(mprice);
 									
-										if(dtm.getRowCount() == 0) {
+										
+										/* 메뉴 추가
+
+										 */
+										order = new Vector<>();
+
+										
+										order.add(tclass);
+										order.add(mmenu);
+										order.add(mprice);
+										order.add(amount);
+										order.add(Integer.toString(Integer.parseInt(mprice)*amount));
+										
+										total=total+Integer.parseInt(mprice)*amount;
+										//System.out.println(total);
+										txtTotal.setText(Integer.toString(total));
+										
+										amount=0;														
+
+										dtm.addRow(order);
+										
+
+										
+										
+										
+										
+										/*
+										 * 테이블에서 메뉴명 같은 것 찾기 ===================================================================
+										 * 
+										 * 
+										 * 
+										 * 
+										 * 
+										
+										
+										if(dtm.getRowCount() == 0) { // 테이블에 데이터 없을 때
 											amount++;
 											order = new Vector<>();
 											
@@ -926,8 +989,12 @@ public class WinOrder extends JDialog {
 											dtm.addRow(order);
 							
 											}else {
-												for(int i = 0 ; i < dtm.getRowCount();i++){ // 주문 내역 테이블 데이터 불러와서
-													if (!table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 없으면 전체 추가
+	
+					   							for(int i = 0 ; i < dtm.getRowCount();i++){
+						  
+												if (!table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 없으면 전체 추가
+													
+														System.out.println(mmenu);
 														System.out.println(dtm.getRowCount()+"        59159595925");
 														System.out.println("없다!"+table.getValueAt(i,1));
 														amount++;
@@ -960,16 +1027,25 @@ public class WinOrder extends JDialog {
 														table.setValueAt((accamount+1)*tPrice, i, 4);
 														amount=0;
 														break;
-													}
-												}
+							
+							
+							
+							
+					   }
+					}
 											
-											} 
-									}
-								});
-							}
-							// 시작화면 ================================================================================================
-						}
-
+											
+											
+					
+					} 
+										 */
+			//  테이블에서 메뉴명 같은 것 찾기 ===================================================================
+			
+			}
+		});
+	}
+	// 시작화면 ================================================================================================						}
+}
 				        //getContentPane().add(panel_menuButtonBar, BorderLayout.SOUTH);
 
 						{

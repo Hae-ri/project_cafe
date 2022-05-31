@@ -6,12 +6,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/ici806/Downloads/jsoup-1.15.1.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="C:/Program Files (x86)/MySQL/mysql-connector-java-8.0.27/mysql-connector-java-8.0.27.jar"/>
 	<classpathentry kind="lib" path="C:/JavaTest/JSplashScreen.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ici806/Downloads/javax.mail-1.6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ici806/Downloads/jaudiotagger-2.2.6-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ici806/Downloads/javax.activation-1.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ici806/Downloads/jlayer-1.0.1-1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
