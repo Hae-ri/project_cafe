@@ -70,7 +70,7 @@ public class WinMain extends JFrame {
 		mnuAdmin.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
 		menuBar.add(mnuAdmin);
 		
-		JMenuItem mnuSales = new JMenuItem("매출");
+		JMenuItem mnuSales = new JMenuItem("매출확인");
 		mnuSales.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				WinSales dlg = new WinSales();
@@ -81,21 +81,25 @@ public class WinMain extends JFrame {
 		mnuSales.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
 		mnuAdmin.add(mnuSales);
 		
-		JMenuItem mnuMenu = new JMenuItem("메뉴");
+		JMenuItem mnuMenu = new JMenuItem("메뉴관리");
 		mnuMenu.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
 		mnuMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				WinMenu dlg = new WinMenu();
-				//dlg.setModal(true);
-				dlg.setVisible(true);
-				
+				dlg.setVisible(true);	
 			}
 		});
 
 		mnuAdmin.add(mnuMenu);
 		
-		JMenuItem mnuMember = new JMenuItem("회원");
+		JMenuItem mnuMember = new JMenuItem("회원관리");
 		mnuMember.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
+		mnuMember.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// membertbl
+				// WinMember dlg = new WinMember();
+			}
+		});
 		mnuAdmin.add(mnuMember);
 		
 		JMenu mnuOrder = new JMenu("주문");
@@ -109,7 +113,6 @@ public class WinMain extends JFrame {
 				WinOrder dlg;
 				try {
 					dlg = new WinOrder();
-					//dlg.setModal(true);
 					dlg.setVisible(true);
 				} catch (ClassNotFoundException | SQLException e1) {
 					// TODO Auto-generated catch block
@@ -122,11 +125,21 @@ public class WinMain extends JFrame {
 		
 		JMenuItem mnuViewOrder = new JMenuItem("주문확인");
 		mnuViewOrder.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
+		mnuViewOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				WinViewOrder dlg;
+				dlg = new WinViewOrder();
+				dlg.setVisible(true);
+			}
+		});
 		mnuOrder.add(mnuViewOrder);
 		
+		/*
 		JMenu mnuQnA = new JMenu("도움말");
 		mnuQnA.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
 		menuBar.add(mnuQnA);
+ * 
+ */
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -138,6 +151,7 @@ public class WinMain extends JFrame {
 		
 		JPanel panel_1 = new JPanel();
 		panel.add(panel_1, BorderLayout.CENTER);
+		
 		
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(panel_1, popupMenu);
@@ -154,19 +168,39 @@ public class WinMain extends JFrame {
 		panel_1.setLayout(null);
 		
 		JButton btnInsertOrder = new JButton("주문 처리");
+		btnInsertOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				WinOrder dlg;
+				try {
+					dlg = new WinOrder();
+					dlg.setVisible(true);
+				} catch (ClassNotFoundException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnInsertOrder.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 24));
 		btnInsertOrder.setBounds(31, 79, 130, 120);
 		panel_1.add(btnInsertOrder);
 		
-		JButton btnSales = new JButton("매출 확인");
-		btnSales.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 24));
-		btnSales.setBounds(173, 79, 130, 120);
-		panel_1.add(btnSales);
+		JButton btnViewOrder = new JButton("주문 확인");
+		btnViewOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				WinViewOrder dlg;
+				dlg = new WinViewOrder();
+				dlg.setVisible(true);
+				
+			}
+		});
+		btnViewOrder.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 24));
+		btnViewOrder.setBounds(173, 79, 130, 120);
+		panel_1.add(btnViewOrder);
 		
 		JButton btnMember = new JButton("적립 확인");
 		btnMember.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				WinStamp dlg= new WinStamp();
+				WinViewStamp dlg= new WinViewStamp();
 				dlg.setVisible(true);
 			}
 		});

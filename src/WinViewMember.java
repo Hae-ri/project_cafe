@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -20,29 +19,22 @@ import javax.swing.JTable;
 import java.awt.Panel;
 import javax.swing.JTabbedPane;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
-public class WinShowMember extends JDialog {
+public class WinViewMember extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private String strPhone;
 	private String Members[][] = new String [100][2];
 	private Member member[];
 	private String mphone;
-	int CouponCnt;
-
+	
 	/**
 	 * Create the dialog.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	
-	int getCouponCount() {
-		return CouponCnt;
-	}
 
-	public WinShowMember(String strPhone) throws SQLException, ClassNotFoundException {
+	public WinViewMember(String strPhone) throws SQLException, ClassNotFoundException {
 		this.strPhone = strPhone;
 		setTitle(strPhone + "님의 적립내역");
 		setBounds(100, 100, 450, 391);
@@ -58,7 +50,7 @@ public class WinShowMember extends JDialog {
 
 		int count = SelectMember();
 		
-		Member member[] = new Member[count];
+		ViewMember[] member = new ViewMember[count];
 		// ==========================
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		String strCon = "jdbc:mysql://localhost/project_cafe?user=root&password=1234";
@@ -78,16 +70,14 @@ public class WinShowMember extends JDialog {
 
 
 			for(int i=0;i<count;i++) {
-				member[i] = new Member(Members[i][0],Members[i][1]);				
+				member[i] = new ViewMember(Members[i][0],Members[i][1]);
 				tabbedPane.addTab(Members[i][0], member[i]);
-			}
-			
-			
+		}
 		
 	}
 
-	public WinShowMember() throws ClassNotFoundException, SQLException {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinShowMember.class.getResource("/img/coffee01.png")));
+	public WinViewMember() throws ClassNotFoundException, SQLException {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WinViewMember.class.getResource("/img/coffee01.png")));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
@@ -96,10 +86,7 @@ public class WinShowMember extends JDialog {
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		panel.add(tabbedPane, BorderLayout.CENTER);
-		
-		JPanel panel_1 = new JPanel();
-		panel.add(panel_1, BorderLayout.NORTH);
-		
+
 	}
 
 	private int SelectMember() throws ClassNotFoundException, SQLException {
@@ -112,6 +99,8 @@ public class WinShowMember extends JDialog {
 		ResultSet rs = stmt.executeQuery(sql);
 		int count=0;
 		while(rs.next()) {
+//			Members[count][0] = rs.getString("mphone");
+//			Members[count][1] = Integer.toString(rs.getInt(2));
 			count++;	
 		}
 		return count;

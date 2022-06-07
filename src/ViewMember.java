@@ -6,7 +6,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
@@ -19,23 +18,17 @@ import java.awt.event.ActionListener;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
-public class Member extends JPanel {
+public class ViewMember extends JPanel {
 	private JLabel [] lblStamp = new JLabel[12];
 	private JLabel lblPhone;
 	private JLabel lblTotalStamp;
 	private int coupon;
-	private String strCoupon;
 	private JButton btnCoupon;
 	
-	public int cnt=0;
 	/**
 	 * Create the panel.
 	 */
-	int getCnt() {
-		return cnt;
-	}
-	
-	public Member(String strphone, String strstamp) {
+	public ViewMember(String strphone, String strstamp) {
 		Font font = new Font("나눔스퀘어_ac", Font.PLAIN, 13);
 		int stamp = Integer.parseInt(strstamp);
 		int coupon = stamp/12;
@@ -62,10 +55,6 @@ public class Member extends JPanel {
 		JLabel lblNewLabel = new JLabel("개");
 		lblNewLabel.setFont(font);
 		panel.add(lblNewLabel);
-
-		JPanel panel_btn = new JPanel();
-		panel_btn.setBorder(BorderFactory.createEmptyBorder(0, 0, 12, 0));
-		panel.add(panel_btn);
 		
 		JPanel panel_1 = new JPanel();
 		add(panel_1, BorderLayout.CENTER);
@@ -89,35 +78,9 @@ public class Member extends JPanel {
 				lblStamp[i].setIcon(new ImageIcon("C:\\workspace\\New\\Project_Cafe\\img\\stamp.png"));
 				
 			}
-		}else {
-			Component[] componentList = panel_btn.getComponents();
-			for(Component c: componentList) {
-				if(c instanceof JButton)
-					panel_btn.remove(c);
-			}
-			panel_btn.revalidate();
-			panel_btn.repaint();
-			
+		}else {			
 			stamp = stamp%12; 
 			//coupon = stamp/12; // 스탬프 12개당 쿠폰 1개
-			btnCoupon = new JButton("사용");
-			panel_btn.add(btnCoupon);
-			btnCoupon.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 12));
-			btnCoupon.addActionListener(new ActionListener() { // 음료 버튼 클릭
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// 쿠폰 (*) 사용하시겠습니까?
-					int result= JOptionPane.showConfirmDialog(null, "쿠폰을 사용하시겠습니까?","스탬프 사용",JOptionPane.YES_NO_OPTION);
-					// 예-몇 개 쓸 것인지 물어보고,
-					if(result == JOptionPane.YES_OPTION) {
-						// 해당 핸드폰 번호 날려주고(-12),사용하는 쿠폰 개수, 할인금액 3000원 입력, 창 닫기 --> WinStamp에서 받아서 다시 WinOrder로 전달
-						strCoupon = JOptionPane.showInputDialog("("+coupon+"개) 사용가능");
-						cnt = Integer.parseInt(strCoupon);
-						setVisible(false);
-					}else
-						// 아니오-창 닫기
-						setVisible(false);
-					}
-				});
 			
 			for(int i=0;i<stamp;i++ ) {
 				lblStamp[i].setText("");
@@ -126,9 +89,5 @@ public class Member extends JPanel {
 		}
 		
 
-	}
-	
-	public int getCoupon() {
-		return coupon;
 	}
 }

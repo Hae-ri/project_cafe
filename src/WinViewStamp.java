@@ -19,17 +19,12 @@ import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
-public class WinStamp extends JDialog {
+public class WinViewStamp extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtPhone;
 	private String strPhone;
-	int DC=0;
 
-	public int getDC() {
-		return DC;
-	}
-	
 	private int SelectMember(String strPhone) throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		String strCon = "jdbc:mysql://localhost/project_cafe?user=root&password=1234";
@@ -49,10 +44,10 @@ public class WinStamp extends JDialog {
 	}
 	
 	
-	public WinStamp() {
+	public WinViewStamp() {
 		Font font = new Font("나눔스퀘어_ac", Font.PLAIN, 13);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinStamp.class.getResource("/img/coffee01.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WinViewStamp.class.getResource("/img/coffee01.png")));
 		setTitle("스탬프 조회");
 		setBounds(100, 100, 378, 128);
 		getContentPane().setLayout(new BorderLayout());
@@ -76,21 +71,17 @@ public class WinStamp extends JDialog {
 		btnSelectMember.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String strPhone = txtPhone.getText().trim();
-				WinShowMember dlg;
+				WinViewMember dlg;
 
 				if (!strPhone.equals("")) { // 핸드폰 번호 입력 시
 					try {
 						if(SelectMember(strPhone) > 0 ) {
 							try {
-								
-								dlg = new WinShowMember(strPhone);
+								dlg = new WinViewMember(strPhone);
 								dlg.setModal(true);
-								//setVisible(false);
-								dlg.setVisible(true);
-								
-								DC=3000*dlg.getCouponCount();
 								setVisible(false);
-								
+								dlg.setVisible(true);
+								setVisible(true);
 							} catch (ClassNotFoundException | SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();

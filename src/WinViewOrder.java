@@ -26,8 +26,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import javax.swing.ScrollPaneConstants;
 
-public class WinSales extends JFrame {
+public class WinViewOrder extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -36,15 +37,15 @@ public class WinSales extends JFrame {
 	private DefaultTableModel dtm;
 	private JLabel lblCount;
 	private JLabel lblTotal;
-	
+	private String [] days = {"0","31","28","31","30","31","30","31","31","30","31","30","31"};
 
 
 	/**
 	 * Create the frame.
 	 */
-	public WinSales() {
+	public WinViewOrder() {
 		Font font = new Font("나눔스퀘어_ac", Font.PLAIN, 13);
-		setTitle("월별 매출 조회");
+		setTitle("주문 조회");
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 672, 540);
 		contentPane = new JPanel();
@@ -64,7 +65,20 @@ public class WinSales extends JFrame {
 		lblNewLabel.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 13));
 		panel_north.add(lblNewLabel);
 		
-		JComboBox comboBoxMonth = new JComboBox();
+		JComboBox comboBoxMonth  = new JComboBox();
+		JComboBox comboBoxDay = new JComboBox();
+		comboBoxMonth.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// 월을 선택했을 때 날짜가 콤보박스에 나오게
+				comboBoxDay.removeAllItems();
+				comboBoxDay.addItem("전체");
+				int day = Integer.parseInt(days[comboBoxMonth.getSelectedIndex()]);
+				System.out.println(day);
+					for(int i=0;i<day;i++) {
+						comboBoxDay.addItem(i+1);
+					}
+			}
+		});
 		comboBoxMonth.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
 		comboBoxMonth.setModel(new DefaultComboBoxModel(new String[] {"전체", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}));
 		panel_north.add(comboBoxMonth);
@@ -72,6 +86,14 @@ public class WinSales extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("월");
 		lblNewLabel_1.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
 		panel_north.add(lblNewLabel_1);
+		
+
+		comboBoxDay.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
+		panel_north.add(comboBoxDay);
+		
+		JLabel lblNewLabel_3 = new JLabel("일");
+		lblNewLabel_3.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
+		panel_north.add(lblNewLabel_3);
 		
 		JButton btnSearch = new JButton("조회");
 		btnSearch.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
@@ -82,19 +104,30 @@ public class WinSales extends JFrame {
 					   dtm.removeRow(i);
 				   }
 				}
-				
+				String serch = "";
 				String sYear = (String) comboBoxYear.getSelectedItem(); // 년
 				String sMonth = (String) comboBoxMonth.getSelectedItem(); // 월
+				String sDay = String.valueOf(comboBoxDay.getSelectedItem()); // 일
 				
 				if(!sMonth.equals("전체")) {// 월이 전체가 아닐 떄		
 					if(Integer.parseInt(sMonth)<10)
-						 sMonth="-0" +sMonth;	
-					else
+						sMonth="-0" +sMonth;	
+					if(Integer.parseInt(sMonth)>10)
 						sMonth="-" +sMonth;
+					if(!sDay.equals("전체")) {// 일이 전체가 아닐 떄	
+						if (Integer.parseInt(sDay)<10)
+							sDay="-0" +sDay;	
+						if(Integer.parseInt(sDay)>10) 
+							sDay="-" +sDay;
+					}else {
+						sDay="";
+					}
 				}else {
-					sMonth="";	
+					sMonth="";
+					sDay="";
 				}
-				String serch = sYear+sMonth;
+				serch = sYear+sMonth+sDay;
+				System.out.println(serch);
 
 				
 				try {
@@ -102,14 +135,14 @@ public class WinSales extends JFrame {
 					String strCon = "jdbc:mysql://localhost/project_cafe?user=root&password=1234";
 					Connection con = DriverManager.getConnection(strCon);
 					Statement stmt = con.createStatement();
-					
-					String sql = "select sdate, stotal, spay from salestbl where sdate like '"+ serch + "%'";
+										
+					String sql = "select mdate, menu, amount, total, pay from ordertbl where mdate like '"+ serch + "%'";
 					ResultSet rs = stmt.executeQuery(sql);
 					
 					while(rs.next()) {
 
 						sales = new Vector<>();
-						for(int i=0;i<3;i++) 
+						for(int i=0;i<5;i++) 
 							sales.add(rs.getString(i+1));		
 						dtm.addRow(sales);
 					}
@@ -119,22 +152,24 @@ public class WinSales extends JFrame {
 					e1.printStackTrace();
 				} 
 
-				// 테이블 돌려서 금액 합계, 건수 ?
+				// 테이블 돌려서 금액 합계, 건수
 				int cnt = 0;
 				int sum = 0;
 				for(int i = 0 ; i < dtm.getRowCount();i++){ // 주문 내역 테이블 데이터 불러와서
 					cnt++;
-					int temp = Integer.parseInt(table.getValueAt(i,1).toString());
+					int temp = Integer.parseInt(table.getValueAt(i,3).toString());
 					sum = sum + temp;
 					}
-
+//				System.out.println(cnt + "건");
+//				System.out.println(sum + "원");
+				
 				String strSum =Integer.toString(sum);
 				strSum = strSum.replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
 				lblCount.setText(Integer.toString(cnt)); // 건수
 				lblTotal.setText(strSum); // 합계 금액
 			}
 		});
-		
+
 		panel_north.add(btnSearch);
 		
 		JPanel panel_center = new JPanel();
@@ -176,13 +211,16 @@ public class WinSales extends JFrame {
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panel_1.add(scrollPane, BorderLayout.CENTER);
 		
 		table = new JTable();
 		
 		columnNames = new Vector<>();
 		columnNames.add("날짜");
-		columnNames.add("판매금액");
+		columnNames.add("메뉴명");
+		columnNames.add("수량");
+		columnNames.add("금액");
 		columnNames.add("지불"); // 현금, 카드
 
 		sales = new Vector<>();
@@ -191,9 +229,11 @@ public class WinSales extends JFrame {
 		dtm = new DefaultTableModel(sales,columnNames);
 		table = new JTable(dtm);
 		table.setFont(font);
-		table.getColumnModel().getColumn(0).setPreferredWidth(20);
-		table.getColumnModel().getColumn(1).setPreferredWidth(100);
-		table.getColumnModel().getColumn(2).setPreferredWidth(10);
+//		table.getColumnModel().getColumn(0).setPreferredWidth(60);
+//		table.getColumnModel().getColumn(1).setPreferredWidth(40);
+//		table.getColumnModel().getColumn(2).setPreferredWidth(10);
+//		table.getColumnModel().getColumn(3).setPreferredWidth(10);
+//		table.getColumnModel().getColumn(4).setPreferredWidth(10);
 		
 		
 		table.setAutoCreateRowSorter(true);
