@@ -68,7 +68,7 @@ public class WinOrder extends JDialog {
 	
 	/**
 	 * Launch the application.
-
+*/
 	public static void main(String[] args) {
 		try {
 			WinOrder dialog = new WinOrder();
@@ -1036,10 +1036,7 @@ public class WinOrder extends JDialog {
 										 * 테이블에서 메뉴명 같은 것 찾기 ===================================================================
 										 * 
 										 * 
-										 * 
-										 * 
-										 * 
-										
+
 										
 										if(dtm.getRowCount() == 0) { // 테이블에 데이터 없을 때
 											amount++;
@@ -1063,7 +1060,7 @@ public class WinOrder extends JDialog {
 	
 					   							for(int i = 0 ; i < dtm.getRowCount();i++){
 						  
-												if (!table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 없으면 전체 추가
+													if (!table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 없으면 전체 추가
 													
 														System.out.println(mmenu);
 														System.out.println(dtm.getRowCount()+"        59159595925");
@@ -1087,9 +1084,7 @@ public class WinOrder extends JDialog {
 														dtm.addRow(order);
 														break;
 														
-													}
-													
-													if (table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 있으면, 수량 +1	
+													} if (table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 있으면, 수량 +1	
 														System.out.println("메뉴가 있다!" + table.getValueAt(i,1));
 //														int rowIndex = table.getSelectedRow(i); // 메뉴명이 같은 행
 														int accamount = Integer.parseInt(table.getValueAt(i,3).toString());

@@ -104,25 +104,16 @@ public class WinStamp extends JDialog {
 						e1.printStackTrace();
 					}
 				} else {// 회원 전부 조회
-					
-					/*
-					WinShowMember dlg;
-
-//						try {
-//							dlg = new WinShowMember();
-//							dlg.setModal(true);
-//							dlg.setVisible(true);
-//						} catch (ClassNotFoundException | SQLException e1) {
-//							// TODO Auto-generated catch block
-//							e1.printStackTrace();
-//						}
-						
+					WinMember dlg1;
+					try {
+						dlg1 = new WinMember();
+						dlg1.setModal(true);
+						dlg1.setVisible(true);	
+					} catch (ClassNotFoundException | SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-					*/
-					
 				}
-				
-				
 			}
 		});
 		btnSelectMember.setBounds(246, 25, 89, 23);

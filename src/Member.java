@@ -109,7 +109,7 @@ public class Member extends JPanel {
 					int result= JOptionPane.showConfirmDialog(null, "쿠폰을 사용하시겠습니까?","스탬프 사용",JOptionPane.YES_NO_OPTION);
 					// 예-몇 개 쓸 것인지 물어보고,
 					if(result == JOptionPane.YES_OPTION) {
-						// 해당 핸드폰 번호 날려주고(-12),사용하는 쿠폰 개수, 할인금액 3000원 입력, 창 닫기 --> WinStamp에서 받아서 다시 WinOrder로 전달
+						// 해당 핸드폰 번호 날려주고(-12),사용하는 쿠폰 개수, *할인금액 3000원 입력, 창 닫기 --> WinStamp에서 받아서 다시 WinOrder로 전달
 						strCoupon = JOptionPane.showInputDialog("("+coupon+"개) 사용가능");
 						cnt = Integer.parseInt(strCoupon);
 						setVisible(false);

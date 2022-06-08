@@ -41,7 +41,7 @@ import java.awt.Toolkit;
 public class WinMain extends JFrame {
 
 	private JPanel contentPane;
-	private Clip clip;
+
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -95,9 +95,20 @@ public class WinMain extends JFrame {
 		JMenuItem mnuMember = new JMenuItem("회원관리");
 		mnuMember.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
 		mnuMember.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {				
 				// membertbl
-				// WinMember dlg = new WinMember();
+				// 전체리스트 불러와서 테이블에 보여주고
+				// 핸드폰 번호 입력하고 조회하면 해당 번호만 조회되게
+
+				 WinMember dlg;
+				try {
+					dlg = new WinMember();
+					dlg.setVisible(true);
+				} catch (ClassNotFoundException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
 		});
 		mnuAdmin.add(mnuMember);
@@ -134,12 +145,22 @@ public class WinMain extends JFrame {
 		});
 		mnuOrder.add(mnuViewOrder);
 		
-		/*
+
 		JMenu mnuQnA = new JMenu("도움말");
 		mnuQnA.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
 		menuBar.add(mnuQnA);
- * 
- */
+		
+		JMenuItem mnuIQnA = new JMenuItem("문의하기");
+		mnuIQnA.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 12));
+		mnuIQnA.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				WinPrepared dlg = new WinPrepared();
+				dlg.setModal(true);
+				dlg.setVisible(true);
+			}
+		});
+		mnuQnA.add(mnuIQnA);
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
