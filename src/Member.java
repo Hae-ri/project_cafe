@@ -26,19 +26,29 @@ public class Member extends JPanel {
 	private int coupon;
 	private String strCoupon;
 	private JButton btnCoupon;
+	private int cnt=0; // 사용 스탬프 개수
 	
-	public int cnt=0;
+	private String strphone;
+	private Vector<String> use;
+	
 	/**
 	 * Create the panel.
+	 * @return 
 	 */
-	int getCnt() {
-		return cnt;
+	public Vector<String> getCnt() {
+		Vector<String> use = new Vector<>();
+		strCoupon = Integer.toString(cnt);
+		use.add(strphone);
+		use.add(strCoupon);
+		
+		return use;
 	}
 	
 	public Member(String strphone, String strstamp) {
 		Font font = new Font("나눔스퀘어_ac", Font.PLAIN, 13);
 		int stamp = Integer.parseInt(strstamp);
 		int coupon = stamp/12;
+		this.strphone = strphone;
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
@@ -103,32 +113,39 @@ public class Member extends JPanel {
 			btnCoupon = new JButton("사용");
 			panel_btn.add(btnCoupon);
 			btnCoupon.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 12));
-			btnCoupon.addActionListener(new ActionListener() { // 음료 버튼 클릭
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// 쿠폰 (*) 사용하시겠습니까?
-					int result= JOptionPane.showConfirmDialog(null, "쿠폰을 사용하시겠습니까?","스탬프 사용",JOptionPane.YES_NO_OPTION);
-					// 예-몇 개 쓸 것인지 물어보고,
-					if(result == JOptionPane.YES_OPTION) {
-						// 해당 핸드폰 번호 날려주고(-12),사용하는 쿠폰 개수, *할인금액 3000원 입력, 창 닫기 --> WinStamp에서 받아서 다시 WinOrder로 전달
-						strCoupon = JOptionPane.showInputDialog("("+coupon+"개) 사용가능");
-						cnt = Integer.parseInt(strCoupon);
-						setVisible(false);
-					}else
-						// 아니오-창 닫기
-						setVisible(false);
-					}
-				});
+//			btnCoupon.addActionListener(new ActionListener() { // 음료 버튼 클릭
+//				public void actionPerformed(java.awt.event.ActionEvent e) {
+//					// 쿠폰 (*) 사용하시겠습니까?
+//					int result= JOptionPane.showConfirmDialog(null, "쿠폰을 사용하시겠습니까?","스탬프 사용",JOptionPane.YES_NO_OPTION);
+//					// 예-몇 개 쓸 것인지 물어보고,
+//					if(result == JOptionPane.YES_OPTION) {
+//						
+//						/*
+//						// 해당 핸드폰 번호 날려주고(-12),사용하는 쿠폰 개수, *할인금액 3000원 입력, 창 닫기 --> WinStamp에서 받아서 다시 WinOrder로 전달
+//						strCoupon = JOptionPane.showInputDialog("("+coupon+"개) 사용가능");
+//						cnt = Integer.parseInt(strCoupon);
+//						setVisible(false);
+//						*/
+//						
+//						/*
+//						WinUseStamp Udlg = new WinUseStamp(String num);
+//						Udlg.setModal(true);
+//						Udlg.setVisible(true);
+//
+//						Udlg.setVisible(false);
+//					}else
+//						// 아니오-창 닫기
+//						setVisible(false);
+//					}
+//					*/
+//					
+//					}	
+//				});
 			
 			for(int i=0;i<stamp;i++ ) {
 				lblStamp[i].setText("");
 				lblStamp[i].setIcon(new ImageIcon("C:\\workspace\\New\\Project_Cafe\\img\\stamp.png"));
 			}
-		}
-		
-
-	}
-	
-	public int getCoupon() {
-		return coupon;
+		}		
 	}
 }

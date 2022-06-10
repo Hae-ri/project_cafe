@@ -30,17 +30,13 @@ public class WinShowMember extends JDialog {
 	private String Members[][] = new String [100][2];
 	private Member member[];
 	private String mphone;
-	int CouponCnt;
 
 	/**
 	 * Create the dialog.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	
-	int getCouponCount() {
-		return CouponCnt;
-	}
+
 
 	public WinShowMember(String strPhone) throws SQLException, ClassNotFoundException {
 		this.strPhone = strPhone;

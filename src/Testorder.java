@@ -37,7 +37,7 @@ import java.awt.HeadlessException;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class WinOrder00 extends JDialog {
+public class Testorder extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JPanel panel_menuButtonBar = new JPanel();
@@ -65,12 +65,13 @@ public class WinOrder00 extends JDialog {
 	private JTextField txtDC; // 할인 금액
 	private Font font;
 
+	
 	/**
 	 * Launch the application.
 */
 	public static void main(String[] args) {
 		try {
-			WinOrder00 dialog = new WinOrder00();
+			WinOrder dialog = new WinOrder();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -83,7 +84,7 @@ public class WinOrder00 extends JDialog {
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	public WinOrder00() throws ClassNotFoundException, SQLException {
+	public Testorder() throws ClassNotFoundException, SQLException {
 		font = new Font("나눔스퀘어_ac", Font.PLAIN, 13);
 		initGUI();
 	}
@@ -103,7 +104,7 @@ public class WinOrder00 extends JDialog {
 	
 	public void initGUI() throws ClassNotFoundException, SQLException {
 		Dimension dimension = new Dimension(100, 100);
-		setTitle("주문하기00");
+		setTitle("주문하기");
 		setBounds(100, 100, 966, 675);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -212,7 +213,7 @@ public class WinOrder00 extends JDialog {
 							panel_2.add(lblNewLabel_2);
 						}
 						{
-							txtTotal = new JTextField();
+							txtTotal = new JTextField("0");
 							txtTotal.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							txtTotal.setEditable(false);
 							txtTotal.setColumns(10);
@@ -250,7 +251,7 @@ public class WinOrder00 extends JDialog {
 							panel_2.add(lblNewLabel_4);
 						}
 						{
-							txtChange = new JTextField();
+							txtChange = new JTextField("0");
 							txtChange.setFont(new Font("나눔스퀘어_ac", Font.PLAIN, 14));
 							txtChange.setEditable(false);
 							panel_2.add(txtChange);
@@ -586,13 +587,14 @@ public class WinOrder00 extends JDialog {
 							JButton btnStamp = new JButton("스탬프");
 							btnStamp.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
-									// 핸드폰 번호 입력하면 적립내역 확인
-									WinStamp dlg= new WinStamp();
-									dlg.setModal(true);
-									dlg.setVisible(true);
-									String temp = Integer.toString(dlg.getDC());
-									System.out.println(temp);
-									txtDC.setText(temp);
+									if(Integer.parseInt(txtTotal.getText()) > 0 ) {
+										// 핸드폰 번호 입력하면 적립내역 확인
+										WinStamp dlg= new WinStamp();
+										dlg.setModal(true);
+										dlg.setVisible(true);
+									}else {
+										JOptionPane.showMessageDialog(null, "3000원 이상 주문 시 사용 가능합니다.");
+									}
 								}
 							});
 							
@@ -684,49 +686,33 @@ public class WinOrder00 extends JDialog {
 											@Override
 											public void actionPerformed(ActionEvent e) { // 메뉴 버튼 클릭하면 메뉴명, 가격, 수량을 테이블에 입력
 
+
+												//System.out.println(tclass);
 												JButton btn1 = (JButton) e.getSource();
+												amount++;
 												String[] choice = btn1.getText().split("<br>"); // 클릭한 버튼의 텍스트 가져오기
 												String mmenu = choice[0].substring(39); // 클릭한 버튼의 메뉴명 가져오기
 												String mprice = choice[1].substring(0,choice[1].indexOf("<")); // 클릭한 버튼의 가격 가져오기
 											
-		//  테이블에서 메뉴명 같은 것 찾기 ===================================================================										
 												
-												int rowIndex = 0;
-														
-												for(int i = 0 ; i < dtm.getRowCount();i++){
-													if(table.getValueAt(i,1).equals(mmenu)) {
-														rowIndex=i+1;
-													}
-												}
+												// 오른쪽 테이블에 메뉴 추가
+
+												order = new Vector<>();
+
 												
-												if(rowIndex == 0) {
-													amount++;
-													order = new Vector<>();
+												order.add(tclass);
+												order.add(mmenu);
+												order.add(mprice);
+												order.add(amount);
+												order.add(Integer.toString(Integer.parseInt(mprice)*amount));
+												
+												total=total+Integer.parseInt(mprice)*amount;
+												//System.out.println(total);
+												txtTotal.setText(Integer.toString(total));
+												
+												amount=0;														
 
-													order.add(tclass);
-													order.add(mmenu);
-													order.add(mprice);
-													order.add(amount);
-													order.add(Integer.toString(Integer.parseInt(mprice)*amount));
-													
-													total=total+Integer.parseInt(mprice)*amount;
-													//System.out.println(total);
-													txtTotal.setText(Integer.toString(total));
-													
-													amount=0;														
-
-													dtm.addRow(order);
-												}else {
-													rowIndex=rowIndex-1;
-													int accamount = Integer.parseInt(table.getValueAt(rowIndex,3).toString());
-													int tPrice = Integer.parseInt(table.getValueAt(rowIndex,2).toString());
-													table.setValueAt(accamount+1, rowIndex, 3);
-													table.setValueAt((accamount+1)*tPrice, rowIndex, 4);
-													
-													total=total+tPrice;
-													txtTotal.setText(Integer.toString(total));
-												}									
-		//  테이블에서 메뉴명 같은 것 찾기 ===================================================================
+												dtm.addRow(order);
 											}
 							
 									});
@@ -804,49 +790,34 @@ public class WinOrder00 extends JDialog {
 												@Override
 												public void actionPerformed(ActionEvent e) { // 메뉴 버튼 클릭하면 메뉴명, 가격, 수량을 테이블에 입력
 
+
+													//System.out.println(tclass);
 													JButton btn1 = (JButton) e.getSource();
+													amount++;
 													String[] choice = btn1.getText().split("<br>"); // 클릭한 버튼의 텍스트 가져오기
 													String mmenu = choice[0].substring(39); // 클릭한 버튼의 메뉴명 가져오기
 													String mprice = choice[1].substring(0,choice[1].indexOf("<")); // 클릭한 버튼의 가격 가져오기
 												
-			//  테이블에서 메뉴명 같은 것 찾기 ===================================================================										
 													
-													int rowIndex = 0;
-															
-													for(int i = 0 ; i < dtm.getRowCount();i++){
-														if(table.getValueAt(i,1).equals(mmenu)) {
-															rowIndex=i+1;
-														}
-													}
+													/* 메뉴 추가
+
+													 */
+													order = new Vector<>();
+
 													
-													if(rowIndex == 0) {
-														amount++;
-														order = new Vector<>();
+													order.add(tclass);
+													order.add(mmenu);
+													order.add(mprice);
+													order.add(amount);
+													order.add(Integer.toString(Integer.parseInt(mprice)*amount));
+													
+													total=total+Integer.parseInt(mprice)*amount;
+													//System.out.println(total);
+													txtTotal.setText(Integer.toString(total));
+													
+													amount=0;														
 
-														order.add(tclass);
-														order.add(mmenu);
-														order.add(mprice);
-														order.add(amount);
-														order.add(Integer.toString(Integer.parseInt(mprice)*amount));
-														
-														total=total+Integer.parseInt(mprice)*amount;
-														//System.out.println(total);
-														txtTotal.setText(Integer.toString(total));
-														
-														amount=0;														
-
-														dtm.addRow(order);
-													}else {
-														rowIndex=rowIndex-1;
-														int accamount = Integer.parseInt(table.getValueAt(rowIndex,3).toString());
-														int tPrice = Integer.parseInt(table.getValueAt(rowIndex,2).toString());
-														table.setValueAt(accamount+1, rowIndex, 3);
-														table.setValueAt((accamount+1)*tPrice, rowIndex, 4);
-														
-														total=total+tPrice;
-														txtTotal.setText(Integer.toString(total));
-													}									
-			//  테이블에서 메뉴명 같은 것 찾기 ===================================================================
+													dtm.addRow(order);
 												}
 											});
 										}
@@ -895,7 +866,6 @@ public class WinOrder00 extends JDialog {
 										
 										if(rs.next()) {
 											count= rs.getInt(1);
-											System.out.println(count);
 										}
 										sql = "select * from menuTBL where mclass='디저트'";
 										rs = stmt.executeQuery(sql);
@@ -918,50 +888,34 @@ public class WinOrder00 extends JDialog {
 											@Override
 											public void actionPerformed(ActionEvent e) { // 메뉴 버튼 클릭하면 메뉴명, 가격, 수량을 테이블에 입력
 
+
+												//System.out.println(tclass);
 												JButton btn1 = (JButton) e.getSource();
+												amount++;
 												String[] choice = btn1.getText().split("<br>"); // 클릭한 버튼의 텍스트 가져오기
 												String mmenu = choice[0].substring(39); // 클릭한 버튼의 메뉴명 가져오기
 												String mprice = choice[1].substring(0,choice[1].indexOf("<")); // 클릭한 버튼의 가격 가져오기
 											
-		//  테이블에서 메뉴명 같은 것 찾기 ===================================================================										
 												
-												int rowIndex = 0;
-														
-												for(int i = 0 ; i < dtm.getRowCount();i++){
-													if(table.getValueAt(i,1).equals(mmenu)) {
-														rowIndex=i+1;
-													}
-												}
-												
-												if(rowIndex == 0) {
-													amount++;
-													order = new Vector<>();
+												/* 메뉴 추가
 
-													order.add(tclass);
-													order.add(mmenu);
-													order.add(mprice);
-													order.add(amount);
-													order.add(Integer.toString(Integer.parseInt(mprice)*amount));
-													
-													total=total+Integer.parseInt(mprice)*amount;
-													//System.out.println(total);
-													txtTotal.setText(Integer.toString(total));
-													
-													amount=0;														
+												 */
+												order = new Vector<>();
 
-													dtm.addRow(order);
-												}else {
-													rowIndex=rowIndex-1;
-													int accamount = Integer.parseInt(table.getValueAt(rowIndex,3).toString());
-													int tPrice = Integer.parseInt(table.getValueAt(rowIndex,2).toString());
-													table.setValueAt(accamount+1, rowIndex, 3);
-													table.setValueAt((accamount+1)*tPrice, rowIndex, 4);
-													
-													total=total+tPrice;
-													txtTotal.setText(Integer.toString(total));
-												}									
-		//  테이블에서 메뉴명 같은 것 찾기 ===================================================================
 												
+												order.add(tclass);
+												order.add(mmenu);
+												order.add(mprice);
+												order.add(amount);
+												order.add(Integer.toString(Integer.parseInt(mprice)*amount));
+												
+												total=total+Integer.parseInt(mprice)*amount;
+												//System.out.println(total);
+												txtTotal.setText(Integer.toString(total));
+												
+												amount=0;														
+
+												dtm.addRow(order);
 											}
 										});
 									}
@@ -1045,8 +999,10 @@ public class WinOrder00 extends JDialog {
 									@Override
 									public void actionPerformed(ActionEvent e) { // 메뉴 버튼 클릭하면 메뉴명, 가격, 수량을 테이블에 입력
 
+
+										//System.out.println(tclass);
 										JButton btn1 = (JButton) e.getSource();
-//										amount++;
+										amount++;
 										String[] choice = btn1.getText().split("<br>"); // 클릭한 버튼의 텍스트 가져오기
 										String mmenu = choice[0].substring(39); // 클릭한 버튼의 메뉴명 가져오기
 										String mprice = choice[1].substring(0,choice[1].indexOf("<")); // 클릭한 버튼의 가격 가져오기
@@ -1054,7 +1010,7 @@ public class WinOrder00 extends JDialog {
 										
 										/* 메뉴 추가
 
-										
+										 */
 										order = new Vector<>();
 
 										
@@ -1072,21 +1028,21 @@ public class WinOrder00 extends JDialog {
 
 										dtm.addRow(order);
 										
-								 		*/
-//  테이블에서 메뉴명 같은 것 찾기 ===================================================================										
+
 										
-										int rowIndex = 0;
-												
-										for(int i = 0 ; i < dtm.getRowCount();i++){
-											if(table.getValueAt(i,1).equals(mmenu)) {
-												rowIndex=i+1;
-											}
-										}
 										
-										if(rowIndex == 0) {
+										
+										
+										/*
+										 * 테이블에서 메뉴명 같은 것 찾기 ===================================================================
+										 * 
+										 * 
+
+										
+										if(dtm.getRowCount() == 0) { // 테이블에 데이터 없을 때
 											amount++;
 											order = new Vector<>();
-
+											
 											order.add(tclass);
 											order.add(mmenu);
 											order.add(mprice);
@@ -1098,19 +1054,59 @@ public class WinOrder00 extends JDialog {
 											txtTotal.setText(Integer.toString(total));
 											
 											amount=0;														
-
+	
 											dtm.addRow(order);
-										}else {
-											rowIndex=rowIndex-1;
-											int accamount = Integer.parseInt(table.getValueAt(rowIndex,3).toString());
-											int tPrice = Integer.parseInt(table.getValueAt(rowIndex,2).toString());
-											table.setValueAt(accamount+1, rowIndex, 3);
-											table.setValueAt((accamount+1)*tPrice, rowIndex, 4);
+							
+											}else {
+	
+					   							for(int i = 0 ; i < dtm.getRowCount();i++){
+						  
+													if (!table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 없으면 전체 추가
+													
+														System.out.println(mmenu);
+														System.out.println(dtm.getRowCount()+"        59159595925");
+														System.out.println("없다!"+table.getValueAt(i,1));
+														amount++;
+														System.out.println("없는 거 새로 추가"+ amount);
+														order = new Vector<>();
+														
+														order.add(tclass);
+														order.add(mmenu);
+														order.add(mprice);
+														order.add(amount);
+														order.add(Integer.toString(Integer.parseInt(mprice)*amount));
+														
+														total=total+Integer.parseInt(mprice)*amount;
+														//System.out.println(total);
+														txtTotal.setText(Integer.toString(total));
+														
+														amount=0;														
+														
+														dtm.addRow(order);
+														break;
+														
+													} if (table.getValueAt(i,1).equals(mmenu)) { // 테이블에 메뉴명이 있으면, 수량 +1	
+														System.out.println("메뉴가 있다!" + table.getValueAt(i,1));
+//														int rowIndex = table.getSelectedRow(i); // 메뉴명이 같은 행
+														int accamount = Integer.parseInt(table.getValueAt(i,3).toString());
+														int tPrice = Integer.parseInt(table.getValueAt(i,2).toString());
+														table.setValueAt(accamount+1, i, 3);
+														table.setValueAt((accamount+1)*tPrice, i, 4);
+														amount=0;
+														break;
+							
+							
+							
+							
+					   }
+					}
 											
-											total=total+tPrice;
-											txtTotal.setText(Integer.toString(total));
-										}									
-//  테이블에서 메뉴명 같은 것 찾기 ===================================================================
+											
+											
+					
+					} 
+										 */
+			//  테이블에서 메뉴명 같은 것 찾기 ===================================================================
 			
 			}
 		});
@@ -1194,7 +1190,35 @@ public class WinOrder00 extends JDialog {
 
 
 /*
- * 
+ * menus = new Vector<>();
+menus.add(mmenu);
+System.out.println(menus.size());
+if(menus.size() < 0 ) {
+	
+
+	for(int i=0;i<menus.size();i++) {
+		if(table.getValueAt(i, 0).equals(mmenu)) {
+
+			int accamount = Integer.parseInt(table.getValueAt(i,2).toString());
+			int tPrice = Integer.parseInt(table.getValueAt(i,1).toString());
+			table.setValueAt(accamount+1, i, 2);
+			table.setValueAt((accamount+1)*tPrice, i, 3);
+			}else {
+			order = new Vector<>();
+			order.add(mmenu);
+			order.add(mprice);
+			order.add(amount);
+			order.add(Integer.toString(Integer.parseInt(mprice)*amount));
+			amount=0;														
+			
+			dtm.addRow(order);
+			
+			menus.add(mmenu);
+		}
+		
+	}
+	
+}
 
 
 if(table.getColumn(0).getHeaderValue() != null) { // 테이블에 이미 해당 메뉴가 있으면 수량 +1

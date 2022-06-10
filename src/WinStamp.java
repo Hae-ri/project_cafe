@@ -24,11 +24,6 @@ public class WinStamp extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtPhone;
 	private String strPhone;
-	int DC=0;
-
-	public int getDC() {
-		return DC;
-	}
 	
 	private int SelectMember(String strPhone) throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
@@ -88,7 +83,6 @@ public class WinStamp extends JDialog {
 								//setVisible(false);
 								dlg.setVisible(true);
 								
-								DC=3000*dlg.getCouponCount();
 								setVisible(false);
 								
 							} catch (ClassNotFoundException | SQLException e1) {
