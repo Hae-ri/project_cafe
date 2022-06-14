@@ -64,6 +64,8 @@ public class WinOrder extends JDialog {
 	private JTextField txtChange; // 거스름돈
 	private JTextField txtDC; // 할인 금액
 	private Font font;
+	private String uphone;
+	private String ustamp;
 
 	/**
 	 * Launch the application.
@@ -590,6 +592,10 @@ public class WinOrder extends JDialog {
 										WinStamp dlg= new WinStamp();
 										dlg.setModal(true);
 										dlg.setVisible(true);
+										
+										
+										
+										
 									}else {
 										JOptionPane.showMessageDialog(null, "3000원 이상 주문 시 사용 가능합니다.");
 									}
@@ -1188,7 +1194,13 @@ public class WinOrder extends JDialog {
 	}
 	
 	
-			}
+//	public void useStamp(String uphone, String ustamp) {
+//		this.uphone = uphone;
+//		this.ustamp = ustamp;
+//		
+//	}
+	
+}
 
 
 

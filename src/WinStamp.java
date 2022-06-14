@@ -83,7 +83,7 @@ public class WinStamp extends JDialog {
 								//setVisible(false);
 								dlg.setVisible(true);
 								
-								setVisible(false);
+//								setVisible(false);
 								
 							} catch (ClassNotFoundException | SQLException e1) {
 								// TODO Auto-generated catch block

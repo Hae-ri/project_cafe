@@ -35,20 +35,19 @@ public class Member extends JPanel {
 	 * Create the panel.
 	 * @return 
 	 */
-	public Vector<String> getCnt() {
-		Vector<String> use = new Vector<>();
-		strCoupon = Integer.toString(cnt);
-		use.add(strphone);
-		use.add(strCoupon);
-		
-		return use;
-	}
+//	public Vector<String> getCnt() {
+////		Vector<String> use = new Vector<>();
+//		use.add(strphone);
+//		use.add(strCoupon);
+//		
+//		return use;
+//	}
 	
 	public Member(String strphone, String strstamp) {
 		Font font = new Font("나눔스퀘어_ac", Font.PLAIN, 13);
 		int stamp = Integer.parseInt(strstamp);
 		int coupon = stamp/12;
-		this.strphone = strphone;
+		
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
@@ -109,38 +108,53 @@ public class Member extends JPanel {
 			panel_btn.repaint();
 			
 			stamp = stamp%12; 
+			
 			//coupon = stamp/12; // 스탬프 12개당 쿠폰 1개
 			btnCoupon = new JButton("사용");
 			panel_btn.add(btnCoupon);
 			btnCoupon.setFont(new Font("나눔스퀘어 Bold", Font.PLAIN, 12));
-//			btnCoupon.addActionListener(new ActionListener() { // 음료 버튼 클릭
-//				public void actionPerformed(java.awt.event.ActionEvent e) {
-//					// 쿠폰 (*) 사용하시겠습니까?
-//					int result= JOptionPane.showConfirmDialog(null, "쿠폰을 사용하시겠습니까?","스탬프 사용",JOptionPane.YES_NO_OPTION);
-//					// 예-몇 개 쓸 것인지 물어보고,
-//					if(result == JOptionPane.YES_OPTION) {
-//						
-//						/*
-//						// 해당 핸드폰 번호 날려주고(-12),사용하는 쿠폰 개수, *할인금액 3000원 입력, 창 닫기 --> WinStamp에서 받아서 다시 WinOrder로 전달
-//						strCoupon = JOptionPane.showInputDialog("("+coupon+"개) 사용가능");
+			btnCoupon.addActionListener(new ActionListener() { 
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					String sphone = lblPhone.getText();
+
+//					System.out.println(sphone);
+					// 쿠폰 (*) 사용하시겠습니까?
+					int result= JOptionPane.showConfirmDialog(null, "쿠폰을 사용하시겠습니까?","스탬프 사용",JOptionPane.YES_NO_OPTION);
+					// 예-몇 개 쓸 것인지 물어보고,
+					if(result == JOptionPane.YES_OPTION) {
+						
+					
+						// 해당 핸드폰 번호 날려주고(-12),사용하는 쿠폰 개수, *할인금액 3000원 입력, 창 닫기 --> WinStamp에서 받아서 다시 WinOrder로 전달
+						String strCoupon = JOptionPane.showInputDialog("("+coupon+"개) 사용가능");
 //						cnt = Integer.parseInt(strCoupon);
-//						setVisible(false);
-//						*/
-//						
-//						/*
-//						WinUseStamp Udlg = new WinUseStamp(String num);
-//						Udlg.setModal(true);
-//						Udlg.setVisible(true);
-//
-//						Udlg.setVisible(false);
-//					}else
-//						// 아니오-창 닫기
-//						setVisible(false);
-//					}
-//					*/
-//					
-//					}	
-//				});
+						setVisible(false);
+			
+						/*
+						Vector<String> use = new Vector<>();
+
+						use.add(sphone);
+						use.add(strCoupon);
+					
+//						System.out.println(use.get(0));
+//						System.out.println(use.get(1));
+						*/
+
+						WinUseStamp Udlg = new WinUseStamp(strphone, strCoupon);
+						Udlg.setModal(true);
+						Udlg.setVisible(true);
+
+						Udlg.setVisible(false);
+						
+
+						
+					}else {
+						// 아니오-창 닫기
+						setVisible(false);
+					}
+			
+					
+					}	
+				});
 			
 			for(int i=0;i<stamp;i++ ) {
 				lblStamp[i].setText("");
