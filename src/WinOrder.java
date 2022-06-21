@@ -126,7 +126,7 @@ public class WinOrder extends JDialog {
 				table.setValueAt((accamount+1)*tPrice, rowIndex, 4);
 				
 				total=total+tPrice;
-				System.out.println(total);
+				//System.out.println(total);
 				txtTotal.setText(Integer.toString(total));
 				
 			}
@@ -135,10 +135,11 @@ public class WinOrder extends JDialog {
 		popmnuDel.addActionListener(new ActionListener() { // 메뉴 삭제 버튼 클릭하면 해당 메뉴 삭제
 			public void actionPerformed(ActionEvent e) {
 				int rowIndex = table.getSelectedRow(); 
-				int ttotal = Integer.parseInt((String) table.getValueAt(rowIndex, 4));
+				int ttotal = Integer.parseInt(String.valueOf(table.getValueAt(rowIndex, 4)));
+				
 				
 				total=total-ttotal;
-				System.out.println(total);
+				//System.out.println(total);
 				txtTotal.setText(Integer.toString(total));
 				
 				dtm.removeRow(rowIndex); 
