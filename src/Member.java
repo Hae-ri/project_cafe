@@ -95,7 +95,7 @@ public class Member extends JPanel {
 		if (stamp < 12) {
 			for(int i=0;i<stamp;i++ ) {
 				lblStamp[i].setText("");
-				lblStamp[i].setIcon(new ImageIcon("C:\\workspace\\New\\Project_Cafe\\img\\stamp.png"));
+				lblStamp[i].setIcon(new ImageIcon("img\\stamp.png")); // C:\\workspace\\New\\Project_Cafe\\
 				
 			}
 		}else {
@@ -158,7 +158,7 @@ public class Member extends JPanel {
 			
 			for(int i=0;i<stamp;i++ ) {
 				lblStamp[i].setText("");
-				lblStamp[i].setIcon(new ImageIcon("C:\\workspace\\New\\Project_Cafe\\img\\stamp.png"));
+				lblStamp[i].setIcon(new ImageIcon("img\\stamp.png"));
 			}
 		}		
 	}
