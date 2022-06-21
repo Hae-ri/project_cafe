@@ -105,7 +105,7 @@ public class WinOrder extends JDialog {
 	
 	public void initGUI() throws ClassNotFoundException, SQLException {
 		Dimension dimension = new Dimension(100, 100);
-		setTitle("주문하기00");
+		setTitle("주문하기");
 		setBounds(100, 100, 966, 675);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
